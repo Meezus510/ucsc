@@ -1,0 +1,28 @@
+[ NAME:                   MARK MORENO ]
+[ CRUZ ID:        maalmore   #1742618 ]
+[ PROJECT:                        pa4 ]
+
+1) [ FindPath.c ]: This file will take in three arguments from the command line;
+file name, input.txt, and output.text. will read file that starts with number of vertices and continue with edges. It will continue into it reaches 0 0 then read edges to print util it reaches 0 0
+
+2) [ List.h ]: Header file for the List operations in List.c,  
+
+3) [ List.c]: This is the main program for List. The list object will contain pointers to
+it first and last element called front and back. It will also contain a curser which
+is a pointer to any element in the List or could be set to NULL. List.c contains
+functions to creating and freeing the List and node objects.
+List.c has functions for the cursor to traverse the List both directions and functions
+to make changes at the location of the curser. The list itself is basically a
+doubly linked list.
+
+4) [ Makefile]: Provided file that will compile our program. The only change
+Made to the Makefile from the provided one was adding  rm -f *.txt *.sh
+which helps clean the directory from unnecessary files.
+
+5) [GraphTest.c]: This will create a graph with random ints and random edges.
+
+6) [README]: this file, basically a table of contents
+
+7) [Graph.h]: This is the header file for Graph.c
+
+8) [Graph.c]: Main program for project. Only modifications made from given functions was the addition of printPath() and insertAdj(); PrintPath prints out the paths in the format given to us. insertAdj()is basically a insert erc from a vertices to a vertices and addArc and addEdge both use this function.
