@@ -38,11 +38,7 @@ int main(int argc, char* argv[]){
     }
     fclose(f);
     
-    //for(int i=0;i<lines;i++){
-    //    printf("%s", contents[i]);
-    //}
-    //printf("\n");
-    //printf("\n");
+    
     List A = newList();
     
     for(int i = 0;i<lines;i++){
@@ -69,9 +65,7 @@ int main(int argc, char* argv[]){
     FILE* fp = fopen (argv[2],"w");
     moveFront(A);
     while(get(A)>=0){
-        //printf("%s",contents[get(A)]);
-        //if(get(A)==lines-1)printf ("%s\n",contents[get(A)]);
-        //else printf ("%s",contents[get(A)]);
+       
         if(get(A)==lines-1)fprintf (fp, "%s\n",contents[get(A)]);
         else fprintf (fp, "%s",contents[get(A)]);
         moveNext(A);
