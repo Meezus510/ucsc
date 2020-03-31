@@ -1,0 +1,51 @@
+[ NAME:                   MARK MORENO ]
+[ CRUZ ID:        maalmore   #1742618 ]
+[ PROJECT:                        pa2 ]
+
+1) [ Sparse.c ]: This file will take in three arguments from the command line;
+file name, input.txt, and output.text. Sparse will read the input.txt that starts with 3
+numbers ex. (10 4 5). it will use the first number as the size, and the next two for
+non-zeros of Matrix A, and B respectively (size Non-zero-A Non-zero-B).
+It will use a for loop to iterate non-zeroamount of times to iterate numbers in
+(int int double) order as new entries in the matrix. Sparce.c will perform all
+functions in the Matrix.c to test for correctness.
+
+how many lines there are. It will copy each line into a string in an array. It 
+will use the List ADT to indirectly sort the strings.
+
+2) [ List.h ]: Header file for the List operations in List.c, This header should only
+be accesable to Matrix
+
+3) [ List.c]: This is the main program for List. The list object will contain pointers to
+it first and last element called front and back. It will also contain a curser which
+is a pointer to any element in the List or could be set to NULL. List.c contains
+functions to creating and freeing the List and node objects.
+List.c has functions for the cursor to traverse the List both directions and funtions
+to make changes at the location of the curser. The list itself is basically a
+doubly linked list.
+
+4) [ Makefile]: Provided file that will compile our program. The only change
+Made to the Makefile from the provided one was adding  rm -f *.txt *.sh
+which helps clean the directory from unessisary files.
+
+5) [ListTest.c]: An edited version of the ListClient provided. This test will
+fill a list with random numbers using a random number genorator. it will also
+fill a list with random doubles to show it is compatable with different types.
+It even tests filling the list with char. This List will work with any data type
+becaouse it is now a list of pointers
+
+6) [README]: this file, basically a table of contents
+
+7) [Matrix.h]: This is the header file for Matrix.c, and should only be accesable to
+the client and Matrix.c. initiallizes all functions in Matrix.c
+
+8) [Matrix.c]: This file will hold all functions needed for the Matrix operations.
+The program will link the client to the List. the Matrix is basically an object
+that holds an array of lists using pointers. Matrix.c will allocate all memory
+needed to create the Matrix and free it aswell. All operations are stored here.
+Functions for Matrix operations will create a new Matrix, iterate the matrix that was passed
+to the function, do-something to the elememnts in the passed matrix and insert those elements
+in the new Matrix.
+
+9) [MatrixTest.c]: It will create 2 new matrix and fill it will random double.
+it will perform all Matrix operations to ensure they work properly.
