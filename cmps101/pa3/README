@@ -1,0 +1,36 @@
+[ NAME:                   MARK MORENO ]
+[ CRUZ ID:        maalmore   #1742618 ]
+[ PROJECT:                        pa2 ]
+
+1) [ Arithmetic.c ]: This file will take in three arguments from the command line;
+file name, input.txt, and output.text. will read file that starts with number of digits and the value. It will perform all the operations given in the instructions
+
+2) [ List.h ]: Header file for the List operations in List.c, This header should only
+be accessible to Matrix
+
+3) [ List.c]: This is the main program for List. The list object will contain pointers to
+it first and last element called front and back. It will also contain a curser which
+is a pointer to any element in the List or could be set to NULL. List.c contains
+functions to creating and freeing the List and node objects.
+List.c has functions for the cursor to traverse the List both directions and functions
+to make changes at the location of the curser. The list itself is basically a
+doubly linked list.
+
+4) [ Makefile]: Provided file that will compile our program. The only change
+Made to the Makefile from the provided one was adding  rm -f *.txt *.sh
+which helps clean the directory from unnecessary files.
+
+5) [ListTest.c]: An edited version of the ListClient provided. This test will
+fill a list with Longs and test operations
+
+6) [README]: this file, basically a table of contents
+
+7) [BigInteger.h]: This is the header file for BigInteger.c
+
+8) [BigInteger.c]: This file will hold all functions needed for the Arithmetic operations.
+The program will link the client to the List. the BigInteger is basically an object
+that holds a list of longs. BigInteger.c will allocate all memory
+needed to create the Number and free it as-well. All operations are stored here.
+
+
+9) [BigInteger.c]: tests all functions
