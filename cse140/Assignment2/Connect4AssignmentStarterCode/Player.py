@@ -5,6 +5,11 @@ import numpy as np
 class AIPlayer:
     def __init__(self, player_number):
         self.player_number = player_number
+        #set player number and opponent number
+        if self.player_number == 1:
+            self.opp = 2
+        else: 
+            self.opp = 1
         self.type = 'ai'
         self.player_string = 'Player {}:ai'.format(player_number)
 
@@ -16,38 +21,41 @@ class AIPlayer:
         return valid_cols
 
     def next_row(self, board, col):
-        for r in range(6):
+        #find next available colomn
+        for r in range(5,-1,-1):
             if board[r][col]==0:
                 return r  
 
     def fill(self, row, col, board, player):
         board[row][col]=player
 
-
-
     def player_win(self, board, player):
         # Check horizontal locations for win
         for i in range(7-3):
             for r in range(6):
                 if board[r][i] == player and board[r][i+1] == player and board[r][i+2] == player and board[r][i+3] == player:
+                    print("hor")
                     return True
 
         # Check vertical locations for win
         for i in range(7):
             for j in range(6-3):
                 if board[j][i] == player and board[j+1][i] == player and board[j+2][i] == player and board[j+3][i] == player:
+                    print("ver")
                     return True
 
         # Check positively sloped diaganols
         for i in range(7-3):
             for j in range(6-3):
                 if board[j][i] == player and board[j+1][i+1] == player and board[j+2][i+2] == player and board[j+3][i+3] == player:
+                    print("slo")
                     return True
 
         # Check negatively sloped diaganols
         for i in range(7-3):
             for j in range(3, 6):
                 if board[j][i] == player and board[j-1][i+1] == player and board[j-2][i+2] == player and board[j-3][i+3] == player:
+                    print("ols")
                     return True
                 
     def is_terminal(self, board):
@@ -74,8 +82,8 @@ class AIPlayer:
         The 0 based index of the column that represents the next move
         """
 
-        col, value = self.max_value(4, board, -1000000000, 1000000000)
-        #raise NotImplementedError('Whoops I don\'t know what to do')
+        col, value = self.max_value(6, board, -1000000000, 1000000000)
+        
         return col
 
     def max_value(self, depth, board, alpha, beta):
@@ -85,6 +93,8 @@ class AIPlayer:
 
         terminal = self.is_terminal(board) #game.IS-TERMINAL
         if terminal or depth==0: 
+            print(board)
+            print("terminal", depth)
             return (None, self.evaluation_function(board))
             
 
@@ -94,13 +104,19 @@ class AIPlayer:
             row = self.next_row(board, col)
             board_copy = board.copy()
             self.fill(row, col, board_copy, self.player_number)
-            score = self.min_value(depth-1,board_copy, alpha, beta)[1]
+            #print(board_copy)
+            score = self.min_value(depth-1, board_copy, alpha, beta)[1]
+
             if score > value:
                 value = score
                 column = col
                 alpha = max(alpha, value)
-            if value >= beta:
+
+            ##pruning
+            if beta <= alpha:
                 return column, value
+
+        print(value)
         return column, value
 
     def min_value(self, depth, board, alpha, beta):
@@ -110,6 +126,8 @@ class AIPlayer:
 
         terminal = self.is_terminal(board) #game.IS-TERMINAL
         if terminal or depth==0: 
+            print("terminal", depth)
+            print(board)
             return (None, self.evaluation_function(board))
             
 
@@ -118,15 +136,22 @@ class AIPlayer:
         for col in valid_cols:
             row = self.next_row(board, col)
             board_copy = board.copy()
-            self.fill(row, col, board_copy, self.player_number)
+            self.fill(row, col, board_copy, self.opp)
+            #print(board_copy)
             score = self.max_value(depth-1, board_copy, alpha, beta)[1]
+
             if score < value:
                 value = score
                 column = col
                 beta = min(beta, value)
-            if value <= alpha:
+
+            #pruning
+            if beta <= alpha:
                 return column, value
+
+        print(value)
         return column, value
+
     def exp_max_value(self, depth, board, alpha, beta):
         valid_cols = self.valid_locations(board)
         column = np.random.choice(valid_cols)
@@ -151,7 +176,7 @@ class AIPlayer:
                 break
         return column, value
 
-    def exp_value(self, depth, board, alpha, beta):
+    #def exp_value(self, depth, board, alpha, beta):
         valid_cols = self.valid_locations(board)
         column = np.random.choice(valid_cols)
 
@@ -196,7 +221,7 @@ class AIPlayer:
         RETURNS:
         The 0 based index of the column that represents the next move
         """
-        col, value = self.exp_max_value(4, board, -1000000000, 1000000000)
+        col, value = self.exp_max_value(2, board, -1000000000, 1000000000)
         #raise NotImplementedError('Whoops I don\'t know what to do')
         return col
         
@@ -204,25 +229,32 @@ class AIPlayer:
 
 
     def evaluate_section(self, section):
+
+        #find opponents player number
         if self.player_number == 1:
             opp = 2
         else: 
             opp = 1
+
         score = 0
 
-
+        #check if a player has 4 in a row
         if section.count(self.player_number) == 4:
             score += 10000
-        if section.count(self.player_number) == 3 and section.count(0) == 1:
-            score += 4
-        if section.count(self.player_number) == 2 and section.count(0) == 2:
-            score += 2
-        if section.count(opp) == 4:
+        elif section.count(opp) == 4:
             score -= 10000
-        if section.count(opp) == 3 and section.count(0) == 1:
-            score -= 50
-        if section.count(opp) == 2 and section.count(0) == 2:
-            score -= 2
+
+
+        #if section.count(self.player_number) == 3 and section.count(0) == 1:
+        #    score += 4
+       # if section.count(self.player_number) == 2 and section.count(0) == 2:
+       #    score += 2
+       # if section.count(opp) == 4:
+       ##     score -= 10000
+       # if section.count(opp) == 3 and section.count(0) == 1:
+       #     score -= 50
+       # if section.count(opp) == 2 and section.count(0) == 2:
+       #     score -= 2
 
 
         return score
