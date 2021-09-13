@@ -34,28 +34,28 @@ class AIPlayer:
         for i in range(7-3):
             for r in range(6):
                 if board[r][i] == player and board[r][i+1] == player and board[r][i+2] == player and board[r][i+3] == player:
-                    print("hor")
+                    #print("hor")
                     return True
 
         # Check vertical locations for win
         for i in range(7):
             for j in range(6-3):
                 if board[j][i] == player and board[j+1][i] == player and board[j+2][i] == player and board[j+3][i] == player:
-                    print("ver")
+                    #print("ver")
                     return True
 
         # Check positively sloped diaganols
         for i in range(7-3):
             for j in range(6-3):
                 if board[j][i] == player and board[j+1][i+1] == player and board[j+2][i+2] == player and board[j+3][i+3] == player:
-                    print("slo")
+                    #print("slo")
                     return True
 
         # Check negatively sloped diaganols
         for i in range(7-3):
             for j in range(3, 6):
                 if board[j][i] == player and board[j-1][i+1] == player and board[j-2][i+2] == player and board[j-3][i+3] == player:
-                    print("ols")
+                    #print("ols")
                     return True
                 
     def is_terminal(self, board):
@@ -81,24 +81,34 @@ class AIPlayer:
         RETURNS:
         The 0 based index of the column that represents the next move
         """
-
-        col, value = self.max_value(6, board, -1000000000, 1000000000)
+        zeros = np.count_nonzero(board==0)
         
+        turn = 42 - zeros
+        print(turn)
+        print(zeros, max(turn//5,2))
+
+        if(zeros==1):
+            zeros +=1
+       
+
+        col, value = self.max_value(min(max(turn//5,2),zeros-1), board, -1000000000, 1000000000)
+        #print("Final value:" , value)
         return col
 
     def max_value(self, depth, board, alpha, beta):
 
         valid_cols = self.valid_locations(board)
         column = np.random.choice(valid_cols)
+        #print (column)
 
         terminal = self.is_terminal(board) #game.IS-TERMINAL
         if terminal or depth==0: 
-            print(board)
-            print("terminal", depth)
+            #print(board)
+            #print("terminal", depth)
             return (None, self.evaluation_function(board))
             
 
-        value = -1000000000 # v <- (-infinity)
+        maxScore = -1000000000 # v <- (-infinity)
 
         for col in valid_cols:
             row = self.next_row(board, col)
@@ -106,18 +116,19 @@ class AIPlayer:
             self.fill(row, col, board_copy, self.player_number)
             #print(board_copy)
             score = self.min_value(depth-1, board_copy, alpha, beta)[1]
+            #print(score)
 
-            if score > value:
-                value = score
+            if score > maxScore:
+                maxScore = score
                 column = col
-                alpha = max(alpha, value)
+                alpha = max(alpha, maxScore)
 
             ##pruning
             if beta <= alpha:
-                return column, value
+                return column, maxScore
 
-        print(value)
-        return column, value
+        #print("return" ,maxScore)
+        return column, maxScore
 
     def min_value(self, depth, board, alpha, beta):
 
@@ -126,12 +137,12 @@ class AIPlayer:
 
         terminal = self.is_terminal(board) #game.IS-TERMINAL
         if terminal or depth==0: 
-            print("terminal", depth)
-            print(board)
+            #print("terminal", depth)
+            #print(board)
             return (None, self.evaluation_function(board))
             
 
-        value = 1000000000 # v <- (-infinity)
+        maxScore = 1000000000 # v <- (-infinity)
 
         for col in valid_cols:
             row = self.next_row(board, col)
@@ -139,18 +150,20 @@ class AIPlayer:
             self.fill(row, col, board_copy, self.opp)
             #print(board_copy)
             score = self.max_value(depth-1, board_copy, alpha, beta)[1]
+            #print(score)
 
-            if score < value:
-                value = score
+            if score < maxScore:
+                maxScore = score
                 column = col
-                beta = min(beta, value)
+                beta = min(beta, maxScore)
 
             #pruning
             if beta <= alpha:
-                return column, value
+                #print("return" ,maxScore)
+                return column, maxScore
 
-        print(value)
-        return column, value
+        #print("return" ,maxScore)
+        return column, maxScore
 
     def exp_max_value(self, depth, board, alpha, beta):
         valid_cols = self.valid_locations(board)
@@ -172,8 +185,9 @@ class AIPlayer:
                 value = score
                 column = col
             alpha = max(alpha, value)
-            if alpha >= beta:
-                break
+            if beta <= alpha:
+                return column, value
+
         return column, value
 
     #def exp_value(self, depth, board, alpha, beta):
@@ -224,9 +238,6 @@ class AIPlayer:
         col, value = self.exp_max_value(2, board, -1000000000, 1000000000)
         #raise NotImplementedError('Whoops I don\'t know what to do')
         return col
-        
-        
-
 
     def evaluate_section(self, section):
 
@@ -243,6 +254,14 @@ class AIPlayer:
             score += 10000
         elif section.count(opp) == 4:
             score -= 10000
+        elif section.count(self.player_number) == 3 and section.count(0) == 1:
+            score += 1000
+        elif section.count(self.player_number) == 2 and section.count(0) == 2:
+            score += 100
+
+        if section.count(opp) == 3 and section.count(0) == 1:
+            score -= 1000
+
 
 
         #if section.count(self.player_number) == 3 and section.count(0) == 1:
