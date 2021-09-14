@@ -77,6 +77,11 @@ class Game:
             if self.game_completed(current_player.player_number):
                 self.game_over = True
                 self.player_string.configure(text=self.players[self.current_turn].player_string + ' wins!')
+            
+            #check if game ends in tie
+            elif not np.count_nonzero(self.board[0]==0):
+                self.game_over = True
+                self.player_string.configure(text=' TIE GAME!')
             else:
                 self.current_turn = int(not self.current_turn)
                 self.player_string.configure(text=self.players[self.current_turn].player_string)
